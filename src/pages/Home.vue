@@ -30,11 +30,11 @@ onMounted(async () => {
 
     <div class="h-screen flex flex-col gap-2 p-3">
       <!-- Music Board -->
-      <div class="h-[280px]">
+      <div class="h-[240px]">
         <MusicController />
       </div>
       <!-- Chat Box -->
-      <div class="h-[calc(100vh_-_312px)]">
+      <div class="h-[calc(100vh_-_252px)]">
         <ChatBox />
       </div>
     </div>

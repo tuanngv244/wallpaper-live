@@ -85,7 +85,7 @@ onMounted(async () => {
       <!-- Background -->
       <div class="p-2">
         <div
-          class="relative mx-auto w-[5rem] h-[5rem] rounded-2xl overflow-hidden shadow-2xl"
+          class="relative mx-auto w-[4rem] h-[4rem] rounded-2xl overflow-hidden shadow-2xl"
         >
           <img
             src="/public/wallpapers/bg-default.jpg"
@@ -118,11 +118,9 @@ onMounted(async () => {
             @input="handleSeek"
             min="0"
             :max="duration"
-            class="w-full h-1 bg-white/30 rounded-full appearance-none cursor-pointer slider"
+            class="w-full h-[2px] bg-white/30 rounded-full appearance-none cursor-pointer slider"
           />
-          <div
-            class="flex justify-between text-white/60 text-sm mt-2 font-medium"
-          >
+          <div class="flex justify-between text-white/60 text-sm font-medium">
             <span>{{ musicStore.formattedCurrentTime }}</span>
             <span>{{ musicStore.formattedDuration }}</span>
           </div>
@@ -130,7 +128,7 @@ onMounted(async () => {
       </div>
 
       <!-- Control Buttons -->
-      <div class="p-2">
+      <div class="p-2 pt-0">
         <div class="flex items-center justify-center space-x-4">
           <!-- Previous Button -->
           <button
@@ -153,7 +151,7 @@ onMounted(async () => {
           >
             <svg
               v-if="!isPlaying"
-              class="w-8 h-8 text-white"
+              class="w-6 h-6 text-white"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -161,7 +159,7 @@ onMounted(async () => {
             </svg>
             <svg
               v-else
-              class="w-8 h-8 text-white"
+              class="w-6 h-6 text-white"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -276,8 +274,8 @@ onMounted(async () => {
 
 .slider::-webkit-slider-thumb {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: white;
   cursor: pointer;
@@ -292,8 +290,8 @@ onMounted(async () => {
 }
 
 .slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: white;
   cursor: pointer;
@@ -310,8 +308,8 @@ onMounted(async () => {
 /* Volume slider */
 .volume-slider::-webkit-slider-thumb {
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: white;
   cursor: pointer;
@@ -320,8 +318,8 @@ onMounted(async () => {
 }
 
 .volume-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: white;
   cursor: pointer;
@@ -379,19 +377,19 @@ onMounted(async () => {
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
   outline: none;
 }
 
 .slider::-webkit-slider-track {
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.3);
 }
 
 .slider::-moz-range-track {
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.3);
   border: none;

@@ -86,7 +86,7 @@ onUnmounted(() => {
       v-if="!isAuthenticated"
       class="glass-panel rounded-3xl overflow-hidden backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl p-4"
     >
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-2">
         <!-- Header -->
         <div class="flex items-center gap-3 mb-2">
           <div
@@ -111,7 +111,7 @@ onUnmounted(() => {
         <!-- Sign In Button -->
         <button
           @click="openLoginModal"
-          class="w-full p-3 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 hover:bg-white/25 transition-all duration-200 hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+          class="w-full p-2 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 hover:bg-white/25 transition-all duration-200 hover:scale-105 shadow-lg flex items-center justify-center gap-2"
         >
           <svg
             class="w-4 h-4 text-white/90"

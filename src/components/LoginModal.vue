@@ -313,7 +313,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
         <button
           @click="handleSubmit"
           :disabled="!canSubmit || loading"
-          class="w-full p-4 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 hover:bg-white/25 transition-all duration-200 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+          class="w-full p-3 rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 hover:bg-white/25 transition-all duration-200 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
         >
           <svg
             v-if="loading"

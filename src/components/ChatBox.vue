@@ -390,20 +390,20 @@ const handleScroll = () => {
           <!-- Emoji Selector Button -->
           <button
             @click="toggleEmojiPicker"
-            class="w-[3rem] h-[3rem] rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-200 hover:scale-105 shadow-lg"
+            class="w-[2.5rem] h-[2.5rem] rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-200 hover:scale-105 shadow-lg"
           >
             <span class="text-lg">{{ selectedEmoji }}</span>
           </button>
 
           <!-- Input Field -->
           <div
-            class="flex-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl h-[3rem] shadow-lg"
+            class="flex-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl h-[2.5rem] shadow-lg"
           >
             <input
               v-model="messageInput"
               @keypress="handleKeyPress"
               placeholder="Message..."
-              class="w-full h-[3rem] bg-transparent text-white placeholder-white/60 outline-none text-xs px-3"
+              class="w-full h-[2.5rem] bg-transparent text-white placeholder-white/60 outline-none text-xs px-3"
             />
           </div>
         </div>
@@ -412,7 +412,7 @@ const handleScroll = () => {
         <button
           @click="sendMessage"
           :disabled="!messageInput.trim() || !currentUser"
-          class="w-[3rem] h-[3rem] rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 hover:bg-white/25 transition-all duration-200 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
+          class="w-[2.5rem] h-[2.5rem] rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 hover:bg-white/25 transition-all duration-200 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
         >
           <svg
             class="w-4 h-4 text-white/90"
