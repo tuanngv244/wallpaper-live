@@ -49,7 +49,7 @@ jobs:
 
       - name: Run ESLint check
         run: |
-          pnpm check:eslint --affected
+          pnpm check:eslint
         env:
           TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
           TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha }}
@@ -87,7 +87,7 @@ jobs:
 
       - name: Run TypeScript type check
         run: |
-          pnpm check:types --affected
+          pnpm check:types
         env:
           TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
           TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha }}
