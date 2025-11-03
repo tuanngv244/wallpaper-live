@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import UploadPanel from "../components/UploadPanel.vue";
 import { useWallpaperStore } from "../stores/wallpaperStore";
 import { useMusicStore } from "../stores/musicStore";
 import { useChatStore } from "../stores/chatStore";

@@ -12,7 +12,6 @@ const repeatMode = ref<"off" | "all" | "one">("off");
 // Computed properties
 const currentTrack = computed(() => musicStore.currentTrack);
 const isPlaying = computed(() => musicStore.isPlaying);
-const progress = computed(() => musicStore.progress);
 const currentTime = computed(() => musicStore.currentTime);
 const duration = computed(() => musicStore.duration);
 

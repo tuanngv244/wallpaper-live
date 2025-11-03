@@ -308,7 +308,7 @@ export const useUserStore = defineStore('user', () => {
             const fileName = `avatars/${user.value.id}.${fileExt}`
 
             // Upload to storage
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('avatars')
                 .upload(fileName, file, { upsert: true })
 

@@ -1,4 +1,4 @@
-import { ref, computed, readonly } from 'vue'
+import { ref, readonly } from 'vue'
 import { supabase } from './useSupabase'
 
 export interface Wallpaper {
@@ -74,7 +74,7 @@ export const useWallpaper = () => {
             const fileName = `${user.id}/${Date.now()}.${fileExt}`
 
             // Upload file to Supabase Storage
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('wallpapers')
                 .upload(fileName, file)
 

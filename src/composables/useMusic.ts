@@ -174,8 +174,8 @@ export const useMusic = () => {
 
             await audio.play()
             error.value = null
-        } catch (err) {
-            error.value = 'Failed to play track'
+        } catch (err: unknown) {
+            error.value = err instanceof Error ? err.message : 'Failed to play track'
             isPlaying.value = false
         }
     }
@@ -193,8 +193,8 @@ export const useMusic = () => {
             try {
                 await audioElement.play()
                 error.value = null
-            } catch (err) {
-                error.value = 'Failed to resume track'
+            } catch (err: unknown) {
+                error.value = err instanceof Error ? err.message : 'Failed to resume track'
             }
         }
     }
