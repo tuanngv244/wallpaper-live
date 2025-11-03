@@ -272,8 +272,6 @@ export const useWallpaperStore = defineStore('wallpaper', () => {
         return wallpapers.value[randomIndex]
     }
 
-    console.log('View 💕-> ', currentWallpaper.value);
-
     return {
         // State
         wallpapers: readonly(wallpapers),

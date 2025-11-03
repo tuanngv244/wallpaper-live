@@ -33,8 +33,6 @@ const userInitials = computed(() => {
   return userDisplayName.value.charAt(0).toUpperCase();
 });
 
-console.log("View 💕-> ", user.value);
-
 // Methods
 const openLoginModal = () => {
   showLoginModal.value = true;
