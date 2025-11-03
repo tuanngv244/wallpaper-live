@@ -47,6 +47,7 @@ export const useUserStore = defineStore('user', () => {
             await supabaseComposable.initAuth()
             supabaseComposable.setupAuthListener()
 
+
             // Sync with supabase composable state
             user.value = supabaseComposable.user.value as User | null
             session.value = supabaseComposable.session.value as Session | null

@@ -85,10 +85,10 @@ onMounted(async () => {
       <!-- Background -->
       <div class="p-2">
         <div
-          class="relative mx-auto w-[4rem] h-[4rem] rounded-2xl overflow-hidden shadow-2xl"
+          class="relative mx-auto w-[4rem] h-[4rem] rounded-full overflow-hidden shadow-2xl animate-spin"
         >
           <img
-            src="/public/wallpapers/bg-default.jpg"
+            src="/wallpapers/bg-default.jpg"
             :alt="currentTrack?.title || 'No Track'"
             class="w-full h-full object-cover"
           />
