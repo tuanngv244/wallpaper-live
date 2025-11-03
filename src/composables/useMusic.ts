@@ -60,7 +60,7 @@ export const useMusic = () => {
                 isPaused.value = true
             })
 
-            audioElement.addEventListener('error', (e) => {
+            audioElement.addEventListener('error', () => {
                 error.value = 'Audio playback error'
                 isPlaying.value = false
                 isPaused.value = false
@@ -119,7 +119,7 @@ export const useMusic = () => {
             const fileName = `${user.id}/${Date.now()}.${fileExt}`
 
             // Upload file to Supabase Storage
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('music')
                 .upload(fileName, file)
 
