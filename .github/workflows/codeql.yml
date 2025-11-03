@@ -1,0 +1,334 @@
+name: Code Quality
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eslint:
+    name: ESLint
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      DO_NOT_TRACK: true
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint check
+        run: |
+          pnpm check:eslint --affected
+        env:
+          TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
+          TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha }}
+
+  types:
+    name: TypeScript
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      DO_NOT_TRACK: true
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      # for website typegen:sanity
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run TypeScript type check
+        run: |
+          pnpm check:types --affected
+        env:
+          TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
+          TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha }}
+
+  biome:
+    name: Biome (format only)
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run biome format check
+        run: |
+          pnpm check:biome
+
+  translation:
+    name: Translation
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      DO_NOT_TRACK: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check translation formatting
+        run: |
+          # Run translation formatter and check if files changed
+          pnpm fmt:translation
+          if ! git diff --exit-code; then
+            echo "Translation files are not properly formatted. Please run 'pnpm fmt:translation' to fix formatting."
+            exit 1
+          fi
+          echo "Translation files are properly formatted."
+
+  graphql:
+    name: GraphQL
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      DO_NOT_TRACK: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check GraphQL formatting
+        run: |
+          # Run GraphQL formatter and check if files changed
+          pnpm fmt:graphql
+          if ! git diff --exit-code; then
+            echo "GraphQL files are not properly formatted. Please run 'pnpm fmt:graphql' to fix formatting."
+            exit 1
+          fi
+          echo "GraphQL files are properly formatted."
+
+  yaml:
+    name: YAML
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      DO_NOT_TRACK: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check YAML formatting
+        run: |
+          # Run YAML linter and check formatting
+          pnpm fmt:yml
+          if ! git diff --exit-code; then
+            echo "YAML files are not properly formatted. Please run 'pnpm fmt:yml' to fix formatting."
+            exit 1
+          fi
+          echo "YAML files are properly formatted."
+
+  cwebp:
+    name: Image Optimization (cwebp)
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      DO_NOT_TRACK: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check for unoptimized images in changes
+        run: |
+          # Get changed files (Added, Copied, Modified, Renamed, Type-changed)
+          CHANGED_FILES=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }}..HEAD || git diff --name-only HEAD~1..HEAD)
+          echo "Changed files: $CHANGED_FILES"
+
+          # Check for invalid characters in file names (Windows compatibility)
+          INVALID_PATTERN=".*[<>:\"|?*\\\\].*"
+          for FILE in $CHANGED_FILES; do
+              if echo "$FILE" | grep -qE "$INVALID_PATTERN"; then
+                  echo "Invalid character found in filename: $FILE"
+                  echo "Windows file system does not allow the following characters: < > : \" | ? * \\"
+                  exit 1
+              fi
+          done
+          echo "All file names are valid."
+
+          # Check for unoptimized image files in changes
+          UNOPTIMIZED_IMAGES=$(echo "$CHANGED_FILES" | grep -E '\.(png|jpg|jpeg)$' | grep -v -E "(opengraph-image|twitter-image|favicon|preview|friendliai-logo)\.(png|jpg|jpeg)$" | grep -v '^apps/wba/' || true)
+
+          if [ -n "$UNOPTIMIZED_IMAGES" ]; then
+            echo "Found unoptimized image files in the changes:"
+            echo "$UNOPTIMIZED_IMAGES"
+            echo ""
+            echo "Please run 'pnpm fmt:cwebp' to compress these images to .webp format."
+            exit 1
+          else
+            echo "No unoptimized images found in changes."
+          fi
+
+  depcheck:
+    name: Dependency Check (knip)
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run knip
+        run: |
+          pnpm depcheck
+
+  test:
+    name: Test Coverage
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      DO_NOT_TRACK: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests with coverage
+        run: |
+          pnpm test -- --coverage
+
+      # https://docs.codecov.com/docs/environment-specific-requirements#github-actions
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          use_oidc: ${{ secrets.CODECOV_TOKEN == '' }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+        continue-on-error: true
+
+      # https://docs.sentry.io/product/test-analytics/
+      - name: Upload test results to Sentry Prevent
+        if: ${{ !cancelled() }}
+        uses: getsentry/prevent-action@v0
+        continue-on-error: true
