@@ -1,0 +1,71 @@
+codecov:
+  require_ci_to_pass: yes
+  notify:
+    wait_for_ci: yes
+
+coverage:
+  precision: 2
+  round: down
+  range: 60..80
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        if_ci_failed: error
+    patch:
+      default:
+        target: 80%
+        threshold: 5%
+        if_ci_failed: error
+
+bundle_analysis:
+  status: "informational"
+  warning_threshold: "5%"
+
+comment:
+  layout: "header, diff, components"
+  require_bundle_changes: true
+  bundle_change_threshold: "1Kb"
+  require_changes: false
+  behavior: default
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+        branches:
+          - "!main"
+  individual_components:
+    # To add a new package with coverage tracking:
+    # 1. Add vitest config to the package (with coverage enabled)
+    # 2. Add component entry below (OPTIONAL - for separate tracking in PR comments)
+    # 3. That's it! GitHub workflow auto-discovers coverage files
+    - component_id: ai-provider
+      name: AI Provider
+      paths:
+        - packages/ai-provider/src/**
+    - component_id: utils
+      name: Utils
+      paths:
+        - internals/utils/src/**
+    - component_id: third-party
+      name: Third Party
+      paths:
+        - internals/third-party/src/**
+
+ignore:
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/coverage/**"
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.integration.test.ts"
+  - "**/*.spec.ts"
+  - "**/*.spec.tsx"
+  - "**/*.d.ts"
+  - "**/test-results/**"
+  - "**/.next/**"
+  - "**/.turbo/**"
