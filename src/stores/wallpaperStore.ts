@@ -227,7 +227,6 @@ export const useWallpaperStore = defineStore('wallpaper', () => {
                 favoriteWallpapers.value = JSON.parse(stored)
             }
         } catch (err) {
-            console.error('Failed to load favorites:', err)
             favoriteWallpapers.value = []
         }
     }
