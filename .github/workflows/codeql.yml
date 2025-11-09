@@ -314,6 +314,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
 
       - name: Use Node.js 22
         uses: actions/setup-node@v6
@@ -326,7 +328,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pnpm test -- --coverage
+          pnpm test:coverage
 
       # https://docs.codecov.com/docs/environment-specific-requirements#github-actions
       - name: Upload coverage to Codecov
@@ -334,6 +336,7 @@ jobs:
         with:
           use_oidc: ${{ secrets.CODECOV_TOKEN == '' }}
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
           fail_ci_if_error: false
         continue-on-error: true
 

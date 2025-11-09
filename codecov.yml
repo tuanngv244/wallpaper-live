@@ -19,42 +19,10 @@ coverage:
         threshold: 5%
         if_ci_failed: error
 
-bundle_analysis:
-  status: "informational"
-  warning_threshold: "5%"
-
 comment:
-  layout: "header, diff, components"
-  require_bundle_changes: true
-  bundle_change_threshold: "1Kb"
+  layout: "header, diff, flags, tree"
   require_changes: false
   behavior: default
-
-component_management:
-  default_rules:
-    statuses:
-      - type: project
-        target: auto
-        threshold: 1%
-        branches:
-          - "!main"
-  individual_components:
-    # To add a new package with coverage tracking:
-    # 1. Add vitest config to the package (with coverage enabled)
-    # 2. Add component entry below (OPTIONAL - for separate tracking in PR comments)
-    # 3. That's it! GitHub workflow auto-discovers coverage files
-    - component_id: ai-provider
-      name: AI Provider
-      paths:
-        - packages/ai-provider/src/**
-    - component_id: utils
-      name: Utils
-      paths:
-        - internals/utils/src/**
-    - component_id: third-party
-      name: Third Party
-      paths:
-        - internals/third-party/src/**
 
 ignore:
   - "**/node_modules/**"
@@ -69,3 +37,7 @@ ignore:
   - "**/test-results/**"
   - "**/.next/**"
   - "**/.turbo/**"
+  - "**/public/**"
+  - "**/vite.config.ts"
+  - "**/tailwind.config.cjs"
+  - "**/postcss.config.js"
