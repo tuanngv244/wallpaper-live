@@ -1,4 +1,4 @@
-import { ref, computed, readonly } from 'vue'
+import { ref, readonly } from 'vue'
 import { supabase } from './useSupabase'
 
 export interface Wallpaper {
@@ -23,7 +23,7 @@ export const useWallpaper = () => {
         uploader_id: 'uploader-xyz',
         tags: [],
         created_at: '2024-01-01T00:00:00Z',
-        file_url: '/wallpapers/bg-default.jpg'
+        file_url: '/wallpapers/video_default.mp4'
     })
     const loading = ref(false)
     const error = ref<string | null>(null)
@@ -74,7 +74,7 @@ export const useWallpaper = () => {
             const fileName = `${user.id}/${Date.now()}.${fileExt}`
 
             // Upload file to Supabase Storage
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('wallpapers')
                 .upload(fileName, file)
 

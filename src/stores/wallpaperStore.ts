@@ -14,7 +14,7 @@ export const useWallpaperStore = defineStore('wallpaper', () => {
         uploader_id: 'uploader-xyz',
         tags: [],
         created_at: '2024-01-01T00:00:00Z',
-        file_url: '/wallpapers/bg-default.jpg'
+        file_url: '/wallpapers/video_default.mp4'
     })
     const favoriteWallpapers = ref<string[]>([]) // Array of wallpaper IDs
     const searchQuery = ref('')
@@ -271,8 +271,6 @@ export const useWallpaperStore = defineStore('wallpaper', () => {
         const randomIndex = Math.floor(Math.random() * wallpapers.value.length)
         return wallpapers.value[randomIndex]
     }
-
-    console.log('View 💕-> ', currentWallpaper.value);
 
     return {
         // State

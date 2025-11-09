@@ -5,7 +5,6 @@ import { useWallpaperStore } from "../stores/wallpaperStore";
 const wallpaperStore = useWallpaperStore();
 
 const currentWallpaper = computed(() => wallpaperStore.currentWallpaper);
-const wallpapers = computed(() => wallpaperStore.wallpapers);
 
 onMounted(async () => {
   await wallpaperStore.initializeStore();

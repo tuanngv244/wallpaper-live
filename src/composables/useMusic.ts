@@ -60,7 +60,7 @@ export const useMusic = () => {
                 isPaused.value = true
             })
 
-            audioElement.addEventListener('error', (e) => {
+            audioElement.addEventListener('error', () => {
                 error.value = 'Audio playback error'
                 isPlaying.value = false
                 isPaused.value = false
@@ -119,7 +119,7 @@ export const useMusic = () => {
             const fileName = `${user.id}/${Date.now()}.${fileExt}`
 
             // Upload file to Supabase Storage
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('music')
                 .upload(fileName, file)
 
@@ -174,8 +174,8 @@ export const useMusic = () => {
 
             await audio.play()
             error.value = null
-        } catch (err) {
-            error.value = 'Failed to play track'
+        } catch (err: unknown) {
+            error.value = err instanceof Error ? err.message : 'Failed to play track'
             isPlaying.value = false
         }
     }
@@ -193,8 +193,8 @@ export const useMusic = () => {
             try {
                 await audioElement.play()
                 error.value = null
-            } catch (err) {
-                error.value = 'Failed to resume track'
+            } catch (err: unknown) {
+                error.value = err instanceof Error ? err.message : 'Failed to resume track'
             }
         }
     }

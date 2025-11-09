@@ -181,11 +181,6 @@ const toggleEmojiPicker = () => {
   showEmojiPicker.value = !showEmojiPicker.value;
 };
 
-const selectEmoji = (emoji: string) => {
-  selectedEmoji.value = emoji;
-  showEmojiPicker.value = false;
-};
-
 const addEmojiToMessage = (emoji: string) => {
   messageInput.value += emoji;
   showEmojiPicker.value = false;

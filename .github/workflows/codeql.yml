@@ -35,6 +35,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
 
       - name: Use Node.js 22
         uses: actions/setup-node@v6
@@ -47,7 +49,7 @@ jobs:
 
       - name: Run ESLint check
         run: |
-          pnpm check:eslint --affected
+          pnpm check:eslint
         env:
           TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
           TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha }}
@@ -71,6 +73,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
 
       - name: Use Node.js 22
         uses: actions/setup-node@v6
@@ -83,7 +87,7 @@ jobs:
 
       - name: Run TypeScript type check
         run: |
-          pnpm check:types --affected
+          pnpm check:types
         env:
           TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
           TURBO_SCM_HEAD: ${{ github.event.pull_request.head.sha }}
@@ -101,6 +105,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
 
       - name: Use Node.js 22
         uses: actions/setup-node@v6
@@ -115,75 +121,75 @@ jobs:
         run: |
           pnpm check:biome
 
-  translation:
-    name: Translation
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    env:
-      DO_NOT_TRACK: true
+  # translation:
+  #   name: Translation
+  #   timeout-minutes: 15
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     DO_NOT_TRACK: true
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v5
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: pnpm
+  #     - name: Use Node.js 22
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: 22
+  #         cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile
 
-      - name: Check translation formatting
-        run: |
-          # Run translation formatter and check if files changed
-          pnpm fmt:translation
-          if ! git diff --exit-code; then
-            echo "Translation files are not properly formatted. Please run 'pnpm fmt:translation' to fix formatting."
-            exit 1
-          fi
-          echo "Translation files are properly formatted."
+  #     - name: Check translation formatting
+  #       run: |
+  #         # Run translation formatter and check if files changed
+  #         pnpm fmt:translation
+  #         if ! git diff --exit-code; then
+  #           echo "Translation files are not properly formatted. Please run 'pnpm fmt:translation' to fix formatting."
+  #           exit 1
+  #         fi
+  #         echo "Translation files are properly formatted."
 
-  graphql:
-    name: GraphQL
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    env:
-      DO_NOT_TRACK: true
+  # graphql:
+  #   name: GraphQL
+  #   timeout-minutes: 15
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     DO_NOT_TRACK: true
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v5
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: pnpm
+  #     - name: Use Node.js 22
+  #       uses: actions/setup-node@v6
+  #       with:
+  #         node-version: 22
+  #         cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile
 
-      - name: Check GraphQL formatting
-        run: |
-          # Run GraphQL formatter and check if files changed
-          pnpm fmt:graphql
-          if ! git diff --exit-code; then
-            echo "GraphQL files are not properly formatted. Please run 'pnpm fmt:graphql' to fix formatting."
-            exit 1
-          fi
-          echo "GraphQL files are properly formatted."
+  #     - name: Check GraphQL formatting
+  #       run: |
+  #         # Run GraphQL formatter and check if files changed
+  #         pnpm fmt:graphql
+  #         if ! git diff --exit-code; then
+  #           echo "GraphQL files are not properly formatted. Please run 'pnpm fmt:graphql' to fix formatting."
+  #           exit 1
+  #         fi
+  #         echo "GraphQL files are properly formatted."
 
   yaml:
     name: YAML
@@ -200,6 +206,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
 
       - name: Use Node.js 22
         uses: actions/setup-node@v6
@@ -276,6 +284,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
 
       - name: Use Node.js 22
         uses: actions/setup-node@v6

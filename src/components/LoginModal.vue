@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useSupabase } from "../composables/useSupabase";
-import { useUserStore } from "../stores/userStore";
 
 interface Props {
   isOpen: boolean;
@@ -12,12 +11,11 @@ interface Emits {
   (e: "success"): void;
 }
 
-const props = defineProps<Props>();
+const { isOpen } = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const { signIn, signUp, signInWithOAuth, signInAnonymously, loading, error } =
   useSupabase();
-const userStore = useUserStore();
 
 // Form state
 const isLoginMode = ref(true);
