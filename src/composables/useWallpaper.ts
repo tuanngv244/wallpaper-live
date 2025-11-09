@@ -23,7 +23,7 @@ export const useWallpaper = () => {
         uploader_id: 'uploader-xyz',
         tags: [],
         created_at: '2024-01-01T00:00:00Z',
-        file_url: '/wallpapers/bg-default.jpg'
+        file_url: '/wallpapers/video_default.mp4'
     })
     const loading = ref(false)
     const error = ref<string | null>(null)
