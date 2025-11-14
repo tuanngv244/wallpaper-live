@@ -254,7 +254,6 @@ export const useChatStore = defineStore('chat', () => {
                 settings.value = { ...settings.value, ...savedSettings }
             }
         } catch (err) {
-            console.error('Failed to load chat settings:', err)
         }
     }
 

@@ -147,12 +147,19 @@ const scrollToBottom = () => {
 };
 
 const sendMessage = async () => {
-  if (!messageInput.value.trim() || !currentUser.value) return;
+  if (!messageInput.value.trim()) return;
 
-  const result = await chatStore.sendMessage(messageInput.value);
-  if (result.success) {
-    messageInput.value = "";
-  }
+  // const result = await chatStore.sendMessage(messageInput.value);
+  // if (result.success) {
+  allMessages.value.push({
+    id: "fake-3",
+    content: messageInput.value,
+    user: { username: "Cyan", avatar_url: null },
+    created_at: new Date(Date.now() - 480000).toISOString(), // 8 min ago
+  });
+  messageInput.value = "";
+  scrollToBottom();
+  // }
 };
 
 const handleKeyPress = (event: KeyboardEvent) => {
