@@ -1,29 +1,52 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, onUpdated, watch } from "vue";
 import { useMusicStore } from "../stores/musicStore";
+import MusicListModal from "./MusicListModal.vue";
+import { ITrack } from "../types/music";
 
 const musicStore = useMusicStore();
 
 // Reactive state
-const volume = ref(80);
+const showMusicListModal = ref(false);
+// const volume = ref(80);
 const isShuffled = ref(false);
 const repeatMode = ref<"off" | "all" | "one">("off");
 
+const audio = ref<HTMLAudioElement | null>(null);
+const curTime = ref(0);
+const dur = ref(0);
+const progress = ref(0); // percentage 0 → 100
+const volume = ref(80);
+
 // Computed properties
-const currentTrack = computed(() => musicStore.currentTrack);
+const curTrack = computed(() => musicStore.currentTrack);
 const isPlaying = computed(() => musicStore.isPlaying);
 const currentTime = computed(() => musicStore.currentTime);
 const duration = computed(() => musicStore.duration);
 
-// Methods
+const openMusicListModal = () => {
+  showMusicListModal.value = true;
+};
+
+const closeMusicListModal = () => {
+  showMusicListModal.value = false;
+};
+
+const formatTime = (t: number) => {
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60)
+    .toString()
+    .padStart(2, "0");
+  return `${m}:${s}`;
+};
 
 const togglePlay = async () => {
   if (isPlaying.value) {
     musicStore.pauseTrack();
   } else if (musicStore.isPaused) {
     await musicStore.resumeTrack();
-  } else if (currentTrack.value) {
-    await musicStore.playTrack(currentTrack.value);
+  } else if (curTrack.value) {
+    await musicStore.playTrack(curTrack.value);
   } else if (musicStore.tracks.length > 0) {
     await musicStore.playTrack(musicStore.tracks[0]);
   }
@@ -48,6 +71,7 @@ const handleVolumeChange = (event: Event) => {
   const newVolume = parseInt(target.value);
   volume.value = newVolume;
   musicStore.setVolume(newVolume / 100);
+  audio.value!.volume = newVolume / 100;
 };
 
 const toggleShuffle = () => {
@@ -69,11 +93,39 @@ const toggleRepeat = () => {
   }
 };
 
-// Lifecycle
+const onChooseMusic = (music: ITrack) => {
+  if (audio.value) {
+    audio.value.src = music.file_url;
+    audio.value.play();
+  }
+  musicStore.setTrack(music);
+  musicStore.saveCurrentTrack();
+};
+
 onMounted(async () => {
-  await musicStore.initializeStore();
   musicStore.loadCurrentTrack();
 });
+
+watch(audio, (audioVal) => {
+  if (!audioVal) return;
+
+  audioVal.volume = volume.value / 100;
+
+  audioVal.onloadedmetadata = () => {
+    dur.value = audioVal?.duration || 0;
+  };
+
+  audioVal.ontimeupdate = () => {
+    curTime.value = audioVal?.currentTime || 0;
+    progress.value =
+      ((audioVal?.currentTime || 0) / (audioVal?.duration || 0)) * 100;
+  };
+});
+
+const seek = () => {
+  if (!audio.value) return;
+  audio.value.currentTime = (progress.value / 100) * dur.value;
+};
 </script>
 
 <template>
@@ -88,7 +140,7 @@ onMounted(async () => {
         >
           <img
             src="/wallpapers/bg-default.jpg"
-            :alt="currentTrack?.title || 'No Track'"
+            :alt="curTrack?.title || 'No Track'"
             class="w-full h-full object-cover"
           />
           <div
@@ -99,10 +151,10 @@ onMounted(async () => {
       <!-- Track Info -->
       <div class="text-center">
         <h2 class="text-white text-[1rem] font-semibold mb-1 truncate">
-          {{ currentTrack?.title || "No Track Playing" }}
+          {{ curTrack?.title || "No Track Playing" }}
         </h2>
         <p class="text-white/70 text-[0.875rem] font-medium truncate">
-          {{ currentTrack?.artist || "Unknown Artist" }}
+          {{ curTrack?.artist || "Unknown Artist" }}
         </p>
       </div>
     </div>
@@ -113,15 +165,15 @@ onMounted(async () => {
         <div class="relative">
           <input
             type="range"
-            :value="currentTime"
-            @input="handleSeek"
+            v-model.number="progress"
+            @input="seek"
             min="0"
-            :max="duration"
+            :max="100"
             class="w-full h-[2px] bg-white/30 rounded-full appearance-none cursor-pointer slider"
           />
           <div class="flex justify-between text-white/60 text-sm font-medium">
-            <span>{{ musicStore.formattedCurrentTime }}</span>
-            <span>{{ musicStore.formattedDuration }}</span>
+            <span>{{ formatTime(curTime) }}</span>
+            <span>{{ formatTime(dur) }}</span>
           </div>
         </div>
       </div>
@@ -145,11 +197,11 @@ onMounted(async () => {
 
           <!-- Play/Pause Button -->
           <button
-            @click="togglePlay"
+            @click="audio?.paused ? audio?.play() : audio?.pause()"
             class="p-2 cursor-pointer rounded-full bg-white/15 backdrop-blur-md border border-white/30 hover:bg-white/25 transition-all duration-200 hover:scale-105 shadow-xl aspect-square"
           >
             <svg
-              v-if="!isPlaying"
+              v-if="audio?.paused"
               class="w-6 h-6 text-white"
               fill="currentColor"
               viewBox="0 0 24 24"
@@ -211,7 +263,7 @@ onMounted(async () => {
             </svg>
             <input
               type="range"
-              v-model="volume"
+              v-model.number="volume"
               @input="handleVolumeChange"
               min="0"
               max="100"
@@ -253,10 +305,49 @@ onMounted(async () => {
               />
             </svg>
           </button>
+
+          <!-- Music List -->
+          <button
+            @click="openMusicListModal"
+            :class="[
+              'p-2 rounded-full transition-all cursor-pointer duration-200 hover:scale-105',
+              'bg-white/30 text-white',
+            ]"
+          >
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path fill="none" d="M0 0h24v24H0z"></path>
+              <path
+                d="M22 6h-5v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6zm-7 0H3v2h12V6zm0 4H3v2h12v-2zm-4 4H3v2h8v-2z"
+              ></path>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
   </div>
+  <audio
+    v-if="curTrack?.file_url"
+    autofocus=""
+    class="h-0 invisible opacity-0"
+    controls
+    ref="audio"
+  >
+    <source :src="curTrack?.file_url" type="audio/mpeg" />
+  </audio>
+  <!-- Music List Modal -->
+  <MusicListModal
+    :is-open="showMusicListModal"
+    @close="closeMusicListModal"
+    @choose="onChooseMusic"
+  />
 </template>
 
 <style scoped>

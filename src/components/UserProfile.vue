@@ -53,6 +53,7 @@ const toggleProfileDropdown = () => {
 
 const handleSignOut = async () => {
   await signOut();
+  await userStore.signOut();
   showProfileDropdown.value = false;
 };
 
@@ -145,7 +146,7 @@ onUnmounted(() => {
     <!-- After Login: Profile Avatar & Info -->
     <div
       v-else
-      class="glass-panel rounded-3xl overflow-hidden backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl p-4 relative"
+      class="glass-panel rounded-3xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl p-4 relative"
     >
       <!-- Profile Button -->
       <button
@@ -191,7 +192,7 @@ onUnmounted(() => {
       <!-- Profile Dropdown -->
       <div
         v-if="showProfileDropdown"
-        class="absolute top-full left-0 right-0 mt-2 bg-white/15 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-50 overflow-hidden"
+        class="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl shadow-2xl z-50 overflow-hidden glass-panel"
       >
         <!-- Profile Info Section -->
         <div class="p-4 border-b border-white/10">
@@ -330,6 +331,22 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.glass-panel {
+  animation: fadeIn 0.3s ease-out;
 }
 
 /* Custom scrollbar */

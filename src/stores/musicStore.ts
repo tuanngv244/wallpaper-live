@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, readonly, watch } from 'vue'
 import { useMusic } from '../composables/useMusic'
 import type { MusicTrack } from '../composables/useMusic'
+import { ITrack } from '../types/music'
 
 export type PlayMode = 'single' | 'repeat' | 'shuffle'
 
@@ -79,6 +80,13 @@ export const useMusicStore = defineStore('music', () => {
         } finally {
             loading.value = false
         }
+    }
+
+    // Upload new music track
+    const setTrack = async (
+        track: ITrack
+    ) => {
+        currentTrack.value = track
     }
 
     const fetchTracks = async () => {
@@ -428,8 +436,8 @@ export const useMusicStore = defineStore('music', () => {
         isPaused: readonly(isPaused),
         volume: readonly(volume),
         isMuted: readonly(isMuted),
-        currentTime: readonly(currentTime),
-        duration: readonly(duration),
+        currentTime: (currentTime),
+        duration: (duration),
         playMode: readonly(playMode),
         autoPlay: readonly(autoPlay),
         loading: readonly(loading),
@@ -471,6 +479,8 @@ export const useMusicStore = defineStore('music', () => {
         searchTracks,
         getTrackById,
         loadCurrentTrack,
-        loadPlaylist
+        loadPlaylist,
+        setTrack,
+        saveCurrentTrack
     }
 })
