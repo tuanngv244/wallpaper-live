@@ -1,5 +1,6 @@
 import { ref, readonly, onUnmounted, watch } from 'vue'
 import { supabase } from './useSupabase'
+import { ITrack } from '../types/music'
 
 export interface MusicTrack {
     id: string
@@ -16,8 +17,8 @@ export interface MusicTrack {
 }
 
 export const useMusic = () => {
-    const tracks = ref<MusicTrack[]>([])
-    const currentTrack = ref<MusicTrack | null>(null)
+    const tracks = ref<ITrack[]>([])
+    const currentTrack = ref<ITrack | null>(null)
     const isPlaying = ref(false)
     const isPaused = ref(false)
     const volume = ref(0.7)
@@ -161,7 +162,7 @@ export const useMusic = () => {
     }
 
     // Play a track
-    const playTrack = async (track: MusicTrack) => {
+    const playTrack = async (track: ITrack) => {
         try {
             const audio = initAudio()
 

@@ -10,9 +10,9 @@ export const useMusicStore = defineStore('music', () => {
     const musicComposable = useMusic()
 
     // State
-    const tracks = ref<MusicTrack[]>([])
-    const currentTrack = ref<MusicTrack | null>(null)
-    const playlist = ref<MusicTrack[]>([])
+    const tracks = ref<ITrack[]>([])
+    const currentTrack = ref<ITrack | null>(null)
+    const playlist = ref<ITrack[]>([])
     const currentPlaylistIndex = ref(0)
     const isPlaying = ref(false)
     const isPaused = ref(false)
@@ -44,7 +44,7 @@ export const useMusicStore = defineStore('music', () => {
 
     // Sync with composable state
     watch(() => musicComposable.tracks.value, (newTracks) => {
-        tracks.value = [...newTracks] as MusicTrack[]
+        tracks.value = [...newTracks] as ITrack[]
     })
 
     watch(() => musicComposable.currentTrack.value, (newTrack) => {
@@ -101,7 +101,7 @@ export const useMusicStore = defineStore('music', () => {
                 return { success: false, error: result.error }
             }
 
-            tracks.value = [...(musicComposable.tracks.value || [])] as MusicTrack[]
+            tracks.value = [...(musicComposable.tracks.value || [])] as ITrack[]
             return { success: true, error: null }
         } catch (err) {
             error.value = err instanceof Error ? err.message : 'Failed to fetch tracks'
@@ -136,7 +136,7 @@ export const useMusicStore = defineStore('music', () => {
         }
     }
 
-    const playTrack = async (track: MusicTrack) => {
+    const playTrack = async (track: ITrack) => {
         try {
             await musicComposable.playTrack(track)
             currentTrack.value = track
@@ -222,13 +222,13 @@ export const useMusicStore = defineStore('music', () => {
         seekTo(time)
     }
 
-    const setPlaylist = (tracks: MusicTrack[], startIndex: number = 0) => {
+    const setPlaylist = (tracks: ITrack[], startIndex: number = 0) => {
         playlist.value = [...tracks]
         currentPlaylistIndex.value = Math.max(0, Math.min(startIndex, tracks.length - 1))
         savePlaylist()
     }
 
-    const addToPlaylist = (track: MusicTrack) => {
+    const addToPlaylist = (track: ITrack) => {
         if (!playlist.value.find(t => t.id === track.id)) {
             playlist.value.push(track)
             savePlaylist()
